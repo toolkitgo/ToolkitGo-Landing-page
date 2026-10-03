@@ -1,20 +1,42 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const inter = localFont({
+  src: "./fonts/Inter-Variable.ttf",
+  variable: "--font-inter",
+  display: "swap",
+  weight: "100 900",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+export const viewport: Viewport = {
+  themeColor: "#0F1940",
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
-  title: "ToolkitGO - Next.js + GSAP + Tailwind CSS",
-  description: "Next.js application featuring GSAP animations and Tailwind CSS v4",
+  title: "ToolkitGO - Simplifying Everyday Services",
+  description:
+    "ToolkitGo connects customers with skilled professionals for household repairs, business maintenance and large-scale service needs.",
+  keywords: [
+    "ToolkitGO",
+    "on-demand technician",
+    "home repairs",
+    "household services",
+    "corporate maintenance",
+    "contract services",
+    "verified professionals",
+  ],
+  authors: [{ name: "ToolkitGO Technologies" }],
+  openGraph: {
+    title: "ToolkitGO - Simplifying Everyday Services",
+    description:
+      "Connect with skilled, verified independent service partners for household repairs, business maintenance and contract services.",
+    siteName: "ToolkitGO",
+    type: "website",
+    locale: "en_IN",
+  },
 };
 
 export default function RootLayout({
@@ -23,11 +45,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
-    >
-      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500/20 selection:text-cyan-300">{children}</body>
+    <html lang="en" className={`${inter.variable} antialiased`}>
+      <body className="min-h-full flex flex-col bg-cream text-navy font-sans selection:bg-orange selection:text-navy">
+        {children}
+      </body>
     </html>
   );
 }
