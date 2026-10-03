@@ -36,7 +36,8 @@ export async function POST(request: Request) {
       EXPERIENCE_RANGES.find((e) => e.value === body.yearsOfExperience)?.label ||
       body.yearsOfExperience;
 
-    const cleanedDigits = body.phoneNumber.replace(/[\s\-+]/g, "").replace(/^91/, "");
+    const rawPhone = typeof body.phoneNumber === "string" ? body.phoneNumber : "";
+    const cleanedDigits = rawPhone.replace(/[\s\-+]/g, "").replace(/^91/, "");
     const formattedPhoneNumber = `+91 ${cleanedDigits}`;
 
     // 3. Relay to Google Sheets Webhook

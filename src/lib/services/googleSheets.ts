@@ -33,10 +33,14 @@ export interface GoogleSheetSubmissionResult {
 export async function submitToGoogleSheet(
   payload: GoogleSheetSubmissionPayload
 ): Promise<GoogleSheetSubmissionResult> {
-  const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+  const rawUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+  // Sanitize webhook URL: strip BOM (\uFEFF), zero-width characters (\u200B-\u200D), quotes and whitespace
+  const webhookUrl = rawUrl
+    ?.replace(/^[\uFEFF\u200B\u200C\u200D\s"']+|[\s"']+$/g, "")
+    .trim();
 
   // Graceful fallback for local development and initial deployments
-  if (!webhookUrl || webhookUrl.trim() === "") {
+  if (!webhookUrl || webhookUrl === "") {
     console.warn(
       "[GoogleSheets Service] GOOGLE_SHEETS_WEBHOOK_URL is not set. Registration payload logged to console:",
       JSON.stringify(payload, null, 2)
