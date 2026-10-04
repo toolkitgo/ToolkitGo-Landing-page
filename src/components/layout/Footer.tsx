@@ -7,6 +7,7 @@ import {
   FOOTER_QUICK_LINKS,
   FOOTER_SERVICE_LINKS,
   FOOTER_SUPPORT_LINKS,
+  LEGAL_NAME,
   SOCIAL_PROFILES,
 } from "@/lib/site";
 import type { FooterLinkGroupProps } from "@/types/ui";
@@ -82,7 +83,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 flex flex-col gap-4 border-t border-navy-border pt-6 text-xs leading-relaxed sm:mt-14 sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; 2026 ToolkitGO Technologies. All rights reserved.</p>
+          <p>&copy; 2026 {LEGAL_NAME}. All rights reserved.</p>
           <a href="#home" className="inline-flex min-h-8 w-fit items-center gap-3 text-sm hover:underline hover:underline-offset-4">Back to top <span aria-hidden="true">&#8593;</span></a>
         </div>
         <div aria-hidden="true" className="pointer-events-none mt-10 -mb-3 select-none overflow-hidden pt-3 text-center sm:mt-14 sm:-mb-5">

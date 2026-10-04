@@ -1,10 +1,55 @@
 import type { FooterLink, SocialProfile } from "@/types/ui";
 
-export const CONTACT_EMAIL = "info@toolkitgo.in";
+export const LEGAL_NAME = "ToolkitGO";
+export const SITE_NAME = "ToolkitGO";
 export const SITE_URL = "https://toolkitgo.in";
+export const CONTACT_EMAIL = "info@toolkitgo.in";
 export const CONTACT_PHONE = "+91 8247474856";
 export const CONTACT_PHONE_HREF = "tel:+918247474856";
-export const CONTACT_LOCATION = "Hyderabad, India";
+export const CONTACT_LOCATION = "Hyderabad, Telangana, India";
+
+export const SITE_TITLE = "ToolkitGO - Simplifying Everyday Services with Verified Technicians in Hyderabad";
+export const SITE_DESCRIPTION =
+  "ToolkitGO connects you with skilled, verified independent professionals for major appliance repairs, electrical systems, plumbing, carpentry, and fabrication across Hyderabad. Transparent master rate card & fast booking.";
+
+export const GEO_COORDINATES = {
+  latitude: 17.385044,
+  longitude: 78.486671,
+};
+
+export const HYDERABAD_LOCALITIES = [
+  "Hitec City",
+  "Gachibowli",
+  "Madhapur",
+  "Kondapur",
+  "Jubilee Hills",
+  "Banjara Hills",
+  "Kukatpally",
+  "Secunderabad",
+  "Begumpet",
+  "Miyapur",
+  "Ameerpet",
+  "Manikonda",
+  "Financial District",
+  "Nallagandla",
+  "Tolichowki",
+];
+
+export const SEO_KEYWORDS = [
+  "ToolkitGO",
+  "ToolkitGO Hyderabad",
+  "verified technicians Hyderabad",
+  "on-demand home services Hyderabad",
+  "AC repair Hyderabad",
+  "refrigerator repair Hyderabad",
+  "washing machine repair Hyderabad",
+  "electrician near me Hyderabad",
+  "plumber near me Hyderabad",
+  "carpenter Hyderabad",
+  "commercial maintenance Hyderabad",
+  "master rate card home services",
+  "join as technician partner",
+];
 
 /** Set official account URLs here once supplied; never guess a business's handle. */
 export const SOCIAL_PROFILES: SocialProfile[] = [
