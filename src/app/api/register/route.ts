@@ -7,6 +7,7 @@ import {
 } from "@/lib/validation/registrationSchema";
 import { RegistrationFormData } from "@/types/registration";
 import { submitToGoogleSheet } from "@/lib/services/googleSheets";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 export async function POST(request: Request) {
   try {
@@ -62,8 +63,8 @@ export async function POST(request: Request) {
         {
           success: false,
           error: sheetsResult.code === "timeout"
-            ? "We could not confirm your registration. Please contact info@toolkit.in before submitting again."
-            : "Your registration could not be saved. Please try again shortly or contact info@toolkit.in.",
+            ? `We could not confirm your registration. Please contact ${CONTACT_EMAIL} before submitting again.`
+            : `Your registration could not be saved. Please try again shortly or contact ${CONTACT_EMAIL}.`,
         },
         { status: sheetsResult.code === "configuration" ? 503 : sheetsResult.code === "timeout" ? 504 : 502 }
       );

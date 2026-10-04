@@ -1,6 +1,7 @@
 import type { FooterLink, SocialProfile } from "@/types/ui";
 
-export const CONTACT_EMAIL = "info@toolkit.in";
+export const CONTACT_EMAIL = "info@toolkitgo.in";
+export const SITE_URL = "https://toolkitgo.in";
 export const CONTACT_PHONE = "+91 9876843210";
 export const CONTACT_PHONE_HREF = "tel:+919876843210";
 export const CONTACT_LOCATION = "Hyderabad, India";
