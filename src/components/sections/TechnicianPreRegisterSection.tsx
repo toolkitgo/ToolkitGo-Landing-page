@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import { useRef, useState, type FormEvent } from "react";
+import { ArrowRight, LoaderCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   RegistrationFormData,
   FormErrors,
@@ -9,13 +11,13 @@ import {
 } from "@/types/registration";
 import {
   validateRegistrationForm,
+  normalizeIndianMobileNumber,
   SERVICE_CATEGORY_GROUPS,
   EXPERIENCE_RANGES,
   HYDERABAD_LOCALITIES_BY_ZONE,
 } from "@/lib/validation/registrationSchema";
 import { SuccessModal } from "@/components/ui/SuccessModal";
 import { SearchableSelect } from "@/components/ui/SearchableSelect";
-
 
 const INITIAL_FORM: RegistrationFormData = {
   fullName: "",
@@ -27,6 +29,7 @@ const INITIAL_FORM: RegistrationFormData = {
 
 export function TechnicianPreRegisterSection() {
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const [formData, setFormData] = useState<RegistrationFormData>(INITIAL_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -34,18 +37,12 @@ export function TechnicianPreRegisterSection() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [successData, setSuccessData] = useState<RegistrationResponse | null>(null);
 
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name as keyof RegistrationFormData]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
+  const updateField = (field: keyof RegistrationFormData, value: string) => {
+    setFormData((previous) => ({ ...previous, [field]: value }));
+    setErrors((previous) => ({ ...previous, [field]: undefined }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setServerError(null);
 
@@ -53,6 +50,8 @@ export function TechnicianPreRegisterSection() {
     const validation = validateRegistrationForm(formData);
     if (!validation.isValid) {
       setErrors(validation.errors);
+      const firstField = Object.keys(validation.errors)[0];
+      formRef.current?.querySelector<HTMLElement>(`[id="${firstField}"]`)?.focus();
       return;
     }
 
@@ -87,238 +86,80 @@ export function TechnicianPreRegisterSection() {
   };
 
   return (
-    <section
-      id="for-technicians"
-
-      className="section-space bg-navy text-white"
-    >
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header Block */}
-        <div className="max-w-2xl mb-9">
-          <div className="eyebrow eyebrow-dark mb-5">
-            For Technicians
-          </div>
-
-          <h2 className="section-title">
-            <span className="text-white">Join Our </span>
-            <span className="text-orange">Network</span>
-          </h2>
-
-          <p className="mt-4 text-base sm:text-lg text-slate-300 leading-relaxed font-normal">
-            Be a part of ToolkitGo and get access to work opportunities across Hyderabad and surrounding regions. Pre-register now!
-          </p>
+    <section id="for-technicians" className="section-space bg-navy text-white">
+      <div className="page-shell max-w-5xl">
+        <div className="mb-8 max-w-2xl sm:mb-10">
+          <p className="eyebrow eyebrow-dark mb-5">For technicians</p>
+          <h2 className="section-title">Join our <span className="text-orange">network.</span></h2>
+          <p className="mt-4 text-base leading-relaxed text-cream sm:text-lg">Find work opportunities across Hyderabad and nearby areas. Tell us a little about yourself to pre-register.</p>
         </div>
-
-        {/* White Form Card */}
-        <div
-
-          className="bg-white rounded-xl p-5 sm:p-9 border border-cream-border text-navy"
-        >
-          {serverError && (
-            <div
-              role="alert"
-              className="mb-6 p-4 rounded-xl bg-error-light border border-error/30 text-error text-sm flex items-center justify-between"
-            >
-              <span>{serverError}</span>
-              <button
-                type="button"
-                onClick={() => setServerError(null)}
-                className="text-xs font-bold underline hover:opacity-80 cursor-pointer"
-              >
-                Dismiss
-              </button>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} noValidate className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Full Name */}
-              <div>
-                <label
-                  htmlFor="fullName"
-                  className="block text-sm font-bold text-navy mb-2"
-                >
-                  Full Name<span className="text-error">*</span>
-                </label>
-                <input
-                  id="fullName"
-                  name="fullName"
-                  type="text"
-                  autoComplete="name"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  placeholder="Enter your name"
-                  aria-required="true"
-                  aria-invalid={!!errors.fullName}
-                  aria-describedby={errors.fullName ? "fullName-error" : undefined}
-                  disabled={status === "submitting"}
-                  className={`w-full px-4 py-3.5 rounded-lg border text-navy placeholder:text-charcoal-muted bg-cream-light focus:outline-none transition-all ${
-                    errors.fullName
-                      ? "border-error focus:border-error bg-error-light/20"
-                      : "border-cream-border focus:border-orange"
-                  }`}
+        <div className="rounded-2xl border border-cream-border bg-white p-5 text-navy sm:p-8 lg:p-10">
+          <div className="mb-7 border-b border-cream-border pb-5">
+            <h3 className="text-xl font-semibold tracking-tight">Partner pre-registration</h3>
+            <p className="mt-2 text-sm leading-relaxed text-charcoal-muted">All fields are required. You can search for your area and service trade.</p>
+          </div>
+          <form ref={formRef} onSubmit={handleSubmit} noValidate className="flex flex-col gap-7" aria-busy={status === "submitting"}>
+            <fieldset disabled={status === "submitting"} className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2">
+              <legend className="sr-only">Your contact and work details</legend>
+              <div data-invalid={!!errors.fullName}>
+                <label htmlFor="fullName" className="mb-2 block text-sm font-semibold">Full name<span aria-hidden="true" className="ml-0.5 text-error">*</span></label>
+                <input id="fullName" name="fullName" type="text" autoComplete="name" maxLength={70}
+                  value={formData.fullName} onChange={(event) => updateField("fullName", event.target.value)} placeholder="Your full name"
+                  aria-required="true" aria-invalid={!!errors.fullName} aria-describedby={errors.fullName ? "fullName-error" : undefined}
+                  className={cn("registration-control min-h-14 w-full rounded-xl border bg-cream-light px-4 py-3 text-base placeholder:text-charcoal-muted", errors.fullName ? "border-error" : "border-cream-border")}
                 />
-                {errors.fullName && (
-                  <p id="fullName-error" className="mt-1.5 text-xs text-error font-medium">
-                    {errors.fullName}
-                  </p>
-                )}
+                {errors.fullName && <p id="fullName-error" className="mt-2 text-sm text-error">{errors.fullName}</p>}
               </div>
-
-              {/* Phone Number */}
-              <div>
-                <label
-                  htmlFor="phoneNumber"
-                  className="block text-sm font-bold text-navy mb-2"
-                >
-                  Phone Number<span className="text-error">*</span>
-                </label>
-                <div
-                  className={`flex rounded-lg border bg-cream-light transition-all ${
-                    errors.phoneNumber
-                      ? "border-error bg-error-light/20"
-                      : "border-cream-border focus-within:border-orange"
-                  }`}
-                >
-                  <span
-                    className="inline-flex items-center px-3.5 border-r border-cream-border text-navy font-bold text-sm select-none bg-slate-100/70 shrink-0"
-                    aria-hidden="true"
-                  >
-                    +91
-                  </span>
-                  <input
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    type="tel"
-                    autoComplete="tel-national"
-                    inputMode="tel"
-                    value={formData.phoneNumber}
-                    onChange={(e) => {
-                      const raw = e.target.value.replace(/\D/g, "");
-                      const cleaned = (raw.startsWith("91") && raw.length > 10 ? raw.slice(2) : raw).slice(0, 10);
-                      setFormData((prev) => ({ ...prev, phoneNumber: cleaned }));
-                      if (errors.phoneNumber) {
-                        setErrors((prev) => ({ ...prev, phoneNumber: undefined }));
-                      }
-                    }}
-                    placeholder="Enter 10-digit mobile number"
-                    aria-required="true"
-                    aria-invalid={!!errors.phoneNumber}
+              <div data-invalid={!!errors.phoneNumber}>
+                <label htmlFor="phoneNumber" className="mb-2 block text-sm font-semibold">Mobile number<span aria-hidden="true" className="ml-0.5 text-error">*</span></label>
+                <div className={cn("registration-control flex min-h-14 overflow-hidden rounded-xl border bg-cream-light", errors.phoneNumber ? "border-error" : "border-cream-border")}>
+                  <span aria-hidden="true" className="flex shrink-0 items-center border-r border-cream-border px-3 text-sm font-semibold">+91</span>
+                  <input id="phoneNumber" name="phoneNumber" type="tel" inputMode="numeric" autoComplete="tel-national"
+                    value={formData.phoneNumber} onChange={(event) => updateField("phoneNumber", normalizeIndianMobileNumber(event.target.value).slice(0, 10))}
+                    placeholder="10-digit mobile number" aria-required="true" aria-invalid={!!errors.phoneNumber}
                     aria-describedby={errors.phoneNumber ? "phoneNumber-error" : undefined}
-                    disabled={status === "submitting"}
-                    className="w-full px-4 py-3.5 bg-transparent text-navy placeholder:text-charcoal-muted focus:outline-none rounded-r-lg"
+                    className="min-w-0 flex-1 bg-transparent px-3 py-3 text-base placeholder:text-charcoal-muted"
                   />
                 </div>
-                {errors.phoneNumber && (
-                  <p id="phoneNumber-error" className="mt-1.5 text-xs text-error font-medium">
-                    {errors.phoneNumber}
-                  </p>
-                )}
+                {errors.phoneNumber && <p id="phoneNumber-error" className="mt-2 text-sm text-error">{errors.phoneNumber}</p>}
               </div>
-
-              {/* Operating Location (Hyderabad & Surrounds) Searchable Combobox */}
-              <SearchableSelect
-                id="city"
-                name="city"
-                label="Operating Area (Hyderabad & Surrounds)"
-                required
-                value={formData.city}
-                onChange={(val) => {
-                  setFormData((prev) => ({ ...prev, city: val }));
-                  if (errors.city) {
-                    setErrors((prev) => ({ ...prev, city: undefined }));
-                  }
-                }}
-                groups={HYDERABAD_LOCALITIES_BY_ZONE}
-                fallbackOption="Other (Hyderabad & Surrounding Area)"
-                error={errors.city}
-                disabled={status === "submitting"}
-                placeholder="Select your Hyderabad area / locality"
-                searchPlaceholder="Search Hyderabad area (e.g. Hitec, Kukatpally)..."
+              <SearchableSelect id="city" name="city" label="Work area" required value={formData.city}
+                onChange={(value) => updateField("city", value)} groups={HYDERABAD_LOCALITIES_BY_ZONE}
+                fallbackOption="Other (Hyderabad & Surrounding Area)" error={errors.city} disabled={status === "submitting"}
+                placeholder="Choose your Hyderabad area" searchPlaceholder="Search area, e.g. Kukatpally"
               />
-
-              {/* Service Category Searchable Combobox */}
-              <SearchableSelect
-                id="serviceCategory"
-                name="serviceCategory"
-                label="Service Category"
-                required
-                value={formData.serviceCategory}
-                onChange={(val) => {
-                  setFormData((prev) => ({ ...prev, serviceCategory: val }));
-                  if (errors.serviceCategory) {
-                    setErrors((prev) => ({ ...prev, serviceCategory: undefined }));
-                  }
-                }}
-                groups={SERVICE_CATEGORY_GROUPS}
-                fallbackOption="Other Technical Trade / Specialized Service"
-                error={errors.serviceCategory}
-                disabled={status === "submitting"}
-                placeholder="Select service trade"
-                searchPlaceholder="Search trade (e.g. AC, Electrical, Plumber, Washing Machine)..."
+              <SearchableSelect id="serviceCategory" name="serviceCategory" label="Service trade" required value={formData.serviceCategory}
+                onChange={(value) => updateField("serviceCategory", value)} groups={SERVICE_CATEGORY_GROUPS}
+                fallbackOption="Other Technical Trade / Specialized Service" error={errors.serviceCategory} disabled={status === "submitting"}
+                placeholder="Choose your service trade" searchPlaceholder="Search AC, plumbing, appliances..."
               />
-            </div>
-
-            {/* Years of Experience Searchable Combobox */}
-            <SearchableSelect
-              id="yearsOfExperience"
-              name="yearsOfExperience"
-              label="Years of Experience"
-              required
-              value={formData.yearsOfExperience}
-              onChange={(val) => {
-                setFormData((prev) => ({ ...prev, yearsOfExperience: val }));
-                if (errors.yearsOfExperience) {
-                  setErrors((prev) => ({ ...prev, yearsOfExperience: undefined }));
-                }
-              }}
-              options={EXPERIENCE_RANGES}
-              error={errors.yearsOfExperience}
-              disabled={status === "submitting"}
-              placeholder="Select experience"
-              searchPlaceholder="Search experience..."
-            />
-
-            {/* Full-Width Orange Submit Button */}
-            <div className="pt-2">
-              <button
-                ref={submitButtonRef}
-                type="submit"
-                disabled={status === "submitting"}
-                className="w-full py-4 px-8 rounded-xl font-bold text-base text-navy bg-orange hover:bg-orange-hover active:bg-orange-active transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-3 cursor-pointer"
-              >
-                {status === "submitting" ? (
-                  <>
-                    <svg aria-hidden="true" className="animate-spin h-5 w-5 text-navy" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                    </svg>
-                    <span>Submitting Application...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Pre-Register Now</span>
-                    <span aria-hidden="true" className="text-xl">&rarr;</span>
-                  </>
-                )}
+              <div className="sm:col-span-2">
+                <SearchableSelect id="yearsOfExperience" name="yearsOfExperience" label="Experience" required value={formData.yearsOfExperience}
+                  onChange={(value) => updateField("yearsOfExperience", value)} options={EXPERIENCE_RANGES}
+                  error={errors.yearsOfExperience} disabled={status === "submitting"} placeholder="Choose your experience"
+                  searchPlaceholder="Search experience"
+                />
+              </div>
+            </fieldset>
+            <div className="border-t border-cream-border pt-6">
+              {serverError && <div role="alert" className="mb-4 flex items-start justify-between gap-3 rounded-xl border border-error bg-error-light p-4 text-sm text-error">
+                <span>{serverError}</span>
+                <button type="button" onClick={() => setServerError(null)} className="shrink-0 font-semibold underline">Dismiss</button>
+              </div>}
+              <button ref={submitButtonRef} type="submit" disabled={status === "submitting"}
+                className="button-primary min-h-14 w-full cursor-pointer rounded-xl text-base disabled:cursor-not-allowed disabled:opacity-60">
+                {status === "submitting" ? <><LoaderCircle aria-hidden="true" className="size-5 animate-spin" />Submitting...</>
+                  : <>Pre-register now<ArrowRight aria-hidden="true" className="size-5" /></>}
               </button>
+              <p className="mt-3 text-center text-xs leading-relaxed text-charcoal-muted">Our team will contact you about the next steps.</p>
             </div>
           </form>
         </div>
       </div>
-
-      {/* Celebratory Modal */}
-      {status === "success" && successData && (
-        <SuccessModal
-          returnFocusRef={submitButtonRef}
-          registrationId={successData.registrationId || "TKGO-EARLY"}
-          onClose={() => {
-            setStatus("idle");
-            setSuccessData(null);
-          }}
-        />
-      )}
+      {status === "success" && successData && <SuccessModal returnFocusRef={submitButtonRef}
+        registrationId={successData.registrationId || "TKGO-EARLY"}
+        onClose={() => { setStatus("idle"); setSuccessData(null); }}
+      />}
     </section>
   );
 }

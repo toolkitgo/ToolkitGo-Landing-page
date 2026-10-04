@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import "./globals.css";
 
 const inter = localFont({
@@ -47,6 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} antialiased`}>
       <body className="min-h-full flex flex-col bg-cream text-navy font-sans selection:bg-orange selection:text-navy">
+        <SmoothScroll />
         {children}
       </body>
     </html>

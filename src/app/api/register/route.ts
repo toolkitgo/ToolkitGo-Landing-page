@@ -3,6 +3,7 @@ import {
   validateRegistrationForm,
   SERVICE_CATEGORIES,
   EXPERIENCE_RANGES,
+  normalizeIndianMobileNumber,
 } from "@/lib/validation/registrationSchema";
 import { RegistrationFormData } from "@/types/registration";
 import { submitToGoogleSheet } from "@/lib/services/googleSheets";
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
       body.yearsOfExperience;
 
     const rawPhone = typeof body.phoneNumber === "string" ? body.phoneNumber : "";
-    const cleanedDigits = rawPhone.replace(/[\s\-+]/g, "").replace(/^91/, "");
+    const cleanedDigits = normalizeIndianMobileNumber(rawPhone);
     const formattedPhoneNumber = `+91 ${cleanedDigits}`;
 
     // 3. Relay to Google Sheets Webhook
@@ -53,9 +54,18 @@ export async function POST(request: Request) {
       status: "Pending Verification",
     });
 
-    if (!sheetsResult.success && sheetsResult.error) {
-      console.warn(
-        `[PreRegistration API] Sheets sync warning for ${registrationId}: ${sheetsResult.error}`
+    if (!sheetsResult.success) {
+      console.error(
+        `[PreRegistration API] Google Sheets save failed (${sheetsResult.code}): ${sheetsResult.error}`
+      );
+      return NextResponse.json(
+        {
+          success: false,
+          error: sheetsResult.code === "timeout"
+            ? "We could not confirm your registration. Please contact info@toolkit.in before submitting again."
+            : "Your registration could not be saved. Please try again shortly or contact info@toolkit.in.",
+        },
+        { status: sheetsResult.code === "configuration" ? 503 : sheetsResult.code === "timeout" ? 504 : 502 }
       );
     }
 

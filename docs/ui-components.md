@@ -22,9 +22,12 @@ ToolkitGO logo, page anchors and solid brand colors. The layout's existing
 `Navbar` export delegates to it. `src/components/ui/demo.tsx` shows standalone
 usage. It requires no context provider or global state store.
 
-The mobile menu supports animated opening and closing, Escape, outside clicks,
-native anchor navigation and reduced-motion preferences. Desktop navigation
-starts at 1024px so the full list fits without crowding.
+The navbar uses a solid floating bar with visible desktop links from 1024px.
+Below that width, a cream dropdown provides large navigation rows, the partner
+action, and contact email. It supports animated opening and closing, Escape,
+outside clicks, focus-leave dismissal, native anchor navigation, and reduced
+motion. The header stays 80px tall so existing scroll offsets remain valid.
+The dropdown is a non-modal disclosure and scrolls natively alongside Lenis.
 
 ## Social profiles
 

@@ -1,0 +1,8 @@
+.git
+.agents
+.claude
+agent
+node_modules
+.next
+docs
+*.log

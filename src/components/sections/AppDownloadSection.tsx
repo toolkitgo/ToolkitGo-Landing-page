@@ -3,21 +3,33 @@ import Image from "next/image";
 /** Store badges are informational until the app is available to download. */
 export function AppDownloadSection() {
   return (
-    <section id="app-download" className="section-space overflow-hidden bg-cream">
-      <div className="page-shell grid items-center gap-x-12 gap-y-8 md:grid-cols-2 lg:gap-x-24">
-        <div className="md:col-start-1 md:row-start-1">
-          <p className="eyebrow">The ToolkitGO app</p>
-          <h2 className="section-title mt-5">Everyday services.<br /><span className="text-orange">Soon in your pocket.</span></h2>
-          <p className="mt-6 max-w-md text-base leading-relaxed text-charcoal sm:text-lg">A faster, simpler way to book and manage services. Our app is launching soon.</p>
-        </div>
-        <Image src="/assets/illustrations/phone-mockup.svg" alt="Preview of the ToolkitGO mobile app"
-          width={2513} height={4907} unoptimized className="mx-auto h-auto w-full max-w-[220px] sm:max-w-[260px] md:col-start-2 md:row-span-2 md:row-start-1 lg:max-w-[280px]" />
-        <div className="text-center md:col-start-1 md:row-start-2 md:self-start md:text-left">
-          <div className="mx-auto flex w-full max-w-[336px] items-center justify-center gap-3 md:mx-0 md:justify-start">
-            <Image src="/assets/badges/app-store-badge.svg" alt="Coming soon to the App Store" width={162} height={48} unoptimized className="h-auto w-[calc((100%-0.75rem)/2)] max-w-[162px]" />
-            <Image src="/assets/badges/google-play-badge.svg" alt="Coming soon to Google Play" width={162} height={48} unoptimized className="h-auto w-[calc((100%-0.75rem)/2)] max-w-[162px]" />
+    <section id="app-download" aria-labelledby="app-download-title" className="bg-cream py-14 sm:py-20">
+      <div className="page-shell-wide">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-8 overflow-hidden rounded-[1.75rem] bg-app-panel px-5 pt-8 pb-7 text-navy sm:rounded-[2.5rem] sm:px-10 sm:pt-10 sm:pb-9 md:min-h-[500px] md:grid-cols-[minmax(0,1.25fr)_minmax(0,0.85fr)] md:gap-y-10 lg:min-h-[550px] lg:px-16 lg:pt-14 lg:pb-12">
+          <div className="min-w-0 md:col-start-1 md:row-start-1">
+            <p className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-semibold uppercase tracking-[0.12em]">
+              <span>Our app</span>
+              <span aria-hidden="true" className="size-1 rounded-full bg-navy" />
+              <span>Launching soon</span>
+            </p>
+            <h2 id="app-download-title" className="app-download-title font-bold">
+              Everyday services.<br />Soon in your pocket.
+            </h2>
+            <p className="mt-5 max-w-[33ch] text-base leading-relaxed sm:text-lg lg:text-xl">
+              A faster, smarter way to book and manage services. All in one app.
+            </p>
           </div>
-          <p className="mt-4 text-sm text-charcoal-muted">Available on iOS and Android at launch.</p>
+          <div className="relative mx-auto w-full max-w-[210px] sm:max-w-[240px] md:col-start-2 md:row-span-2 md:row-start-1 md:max-w-[285px] md:self-stretch lg:max-w-[330px]">
+            <Image src="/assets/illustrations/phone-mockup.svg" alt="Preview of the ToolkitGO mobile app"
+              width={2513} height={4907} unoptimized className="h-auto w-full md:absolute md:inset-x-0 md:top-1" />
+          </div>
+          <div className="min-w-0 md:col-start-1 md:row-start-2 md:self-end">
+            <div className="grid w-full max-w-[410px] grid-cols-2 items-center gap-3 sm:gap-4">
+              <Image src="/assets/badges/app-store-badge.svg" alt="Coming soon to the App Store" width={210} height={62} unoptimized className="h-auto w-full" />
+              <Image src="/assets/badges/google-play-badge.svg" alt="Coming soon to Google Play" width={210} height={62} unoptimized className="h-auto w-full" />
+            </div>
+            <p className="mt-4 text-xs leading-relaxed sm:text-sm">Available on iOS and Android at launch.</p>
+          </div>
         </div>
       </div>
     </section>

@@ -1,87 +1,115 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /**
- * =========================================================================
- * ToolkitGO Enterprise - Google Sheets Webhook Script (Google Apps Script)
- * =========================================================================
- * 
- * Instructions to set up:
- * 1. Open Google Sheets (https://sheets.google.com) and create a new blank spreadsheet.
- * 2. Name your spreadsheet: "ToolkitGO Technician Registrations (Hyderabad)".
- * 3. In the top menu, click: Extensions -> Apps Script.
- * 4. Erase any code in the editor and replace with this entire script.
- * 5. Click "Save" (disk icon).
- * 6. Click "Deploy" (blue button at top right) -> "New deployment".
- * 7. Click the gear icon next to "Select type" and choose "Web app".
- * 8. Set the following deployment configuration:
- *    - Description: "ToolkitGO Webhook v1"
- *    - Execute as: "Me (your-email@gmail.com)"
- *    - Who has access: "Anyone" (IMPORTANT: Do NOT select "Only myself", or Next.js cannot post to it)
- * 9. Click "Deploy". Grant permissions if prompted (Advanced -> Go to Untitled project (unsafe) -> Allow).
- * 10. Copy the "Web app URL" (starts with https://script.google.com/macros/s/...).
- * 11. Paste that URL into your `.env.local` file as:
- *     GOOGLE_SHEETS_WEBHOOK_URL="https://script.google.com/macros/s/.../exec"
- * =========================================================================
+ * ToolkitGO registration webhook.
+ *
+ * 1. Open the target spreadsheet, select the registrations tab, then Extensions > Apps Script.
+ * 2. Replace the existing code with this complete file and save.
+ * 3. Run configureSpreadsheet once from the editor and grant spreadsheet permissions.
+ *    It stores the spreadsheet ID and tab name without writing an application.
+ *    Standalone scripts: set SPREADSHEET_ID and SHEET_NAME in Project Settings > Script properties.
+ * 4. Deploy > Manage deployments > Edit > New version > Deploy.
+ *    Execute as Me; allow access to Anyone. Keep the existing /exec URL.
+ * 5. Open the /exec URL. It must return JSON with ready: true.
  */
 
-function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({ status: "active", message: "ToolkitGO Webhook is online and ready." }))
+/** Editor-only setup: record the bound spreadsheet and the selected tab. */
+function configureSpreadsheet() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  if (!spreadsheet) {
+    throw new Error("Open Apps Script from the target spreadsheet, or set SPREADSHEET_ID and SHEET_NAME in Script properties.");
+  }
+  var sheet = spreadsheet.getActiveSheet();
+  PropertiesService.getScriptProperties().setProperties({
+    SPREADSHEET_ID: spreadsheet.getId(),
+    SHEET_NAME: sheet.getName()
+  });
+  Logger.log("Configured ToolkitGO registration spreadsheet and tab successfully.");
+}
+
+/** Web requests have no active document; always resolve the configured target explicitly. */
+function getRegistrationSheet() {
+  var properties = PropertiesService.getScriptProperties();
+  var spreadsheetId = properties.getProperty("SPREADSHEET_ID");
+  var sheetName = properties.getProperty("SHEET_NAME");
+  if (!spreadsheetId || !sheetName) {
+    throw new Error("Spreadsheet target is not configured. Run configureSpreadsheet in the editor before deploying.");
+  }
+  var spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+  var sheet = spreadsheet.getSheetByName(sheetName);
+  if (!sheet) throw new Error("Configured registration tab was not found. Check SHEET_NAME in Script properties.");
+  return sheet;
+}
+
+function jsonResponse(data) {
+  return ContentService.createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/** Read-only health check: confirms access to the actual registration tab. */
+function doGet() {
+  try {
+    getRegistrationSheet().getLastRow();
+    return jsonResponse({ status: "active", ready: true, version: 2 });
+  } catch (error) {
+    return jsonResponse({ status: "error", ready: false, error: error.toString() });
+  }
+}
+
+/** Validate before acquiring a lock or changing a sheet. */
+function validatePayload(data) {
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    throw new Error("A registration JSON object is required.");
+  }
+  var required = ["registrationId", "fullName", "phoneNumber", "hyderabadArea", "serviceCategory", "yearsOfExperience"];
+  required.forEach(function (field) {
+    if (typeof data[field] !== "string" || !data[field].trim()) {
+      throw new Error("Missing registration field: " + field);
+    }
+  });
+  if (data.fullName.trim().length < 2 || data.fullName.trim().length > 70) {
+    throw new Error("Full name must be between 2 and 70 characters.");
+  }
+  if (!/^\+91 [6-9]\d{9}$/.test(data.phoneNumber)) {
+    throw new Error("A valid Indian mobile number is required.");
+  }
+}
+
+/** Preserve user-supplied values as text, including phone numbers and formula-like input. */
+function sheetText(value) {
+  var text = String(value);
+  return /^[=+\-@]/.test(text) ? "'" + text : text;
 }
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
-  // Wait up to 30 seconds for concurrent writes
-  lock.tryLock(30000);
-
+  var acquired = false;
   try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    
-    // Auto-setup headers if the sheet is brand new
-    setupHeadersIfEmpty(sheet);
-
-    // Parse the incoming JSON body
+    if (!e || !e.postData || !e.postData.contents) throw new Error("Registration request body is missing.");
     var requestData = JSON.parse(e.postData.contents);
+    validatePayload(requestData);
+    acquired = lock.tryLock(5000);
+    if (!acquired) throw new Error("Registrations are busy. Please try again shortly.");
 
-    // Format IST Timestamp
-    var istDate = Utilities.formatDate(
-      new Date(),
-      "Asia/Kolkata",
-      "yyyy-MM-dd HH:mm:ss"
-    );
-
+    var sheet = getRegistrationSheet();
+    setupHeadersIfEmpty(sheet);
     var row = [
-      istDate,
-      requestData.registrationId || "N/A",
-      requestData.fullName || "N/A",
-      "'" + (requestData.phoneNumber || "N/A"), // Leading single quote prevents Excel/Sheets phone number scientific notation
-      requestData.hyderabadArea || "N/A",
-      requestData.serviceCategory || "N/A",
-      requestData.yearsOfExperience || "N/A",
-      requestData.status || "Pending Verification",
-      requestData.source || "toolkitgo_web_landing"
+      Utilities.formatDate(new Date(), "Asia/Kolkata", "yyyy-MM-dd HH:mm:ss"),
+      sheetText(requestData.registrationId),
+      sheetText(requestData.fullName.trim()),
+      sheetText(requestData.phoneNumber),
+      sheetText(requestData.hyderabadArea.trim()),
+      sheetText(requestData.serviceCategory),
+      sheetText(requestData.yearsOfExperience),
+      sheetText(requestData.status || "Pending Verification"),
+      sheetText(requestData.source || "toolkitgo_web_landing")
     ];
-
     sheet.appendRow(row);
-
-    // Format newly appended row: Center-align registration ID, phone number, and status
-    var lastRow = sheet.getLastRow();
-    sheet.getRange(lastRow, 1).setHorizontalAlignment("center");
-    sheet.getRange(lastRow, 2).setHorizontalAlignment("center").setFontWeight("bold");
-    sheet.getRange(lastRow, 4).setHorizontalAlignment("center");
-    sheet.getRange(lastRow, 8).setHorizontalAlignment("center");
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ result: "success", row: lastRow }))
-      .setMimeType(ContentService.MimeType.JSON);
-
+    SpreadsheetApp.flush();
+    return jsonResponse({ result: "success", registrationId: requestData.registrationId, row: sheet.getLastRow() });
   } catch (error) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ result: "error", error: error.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
-
+    return jsonResponse({ result: "error", error: error.toString() });
   } finally {
-    lock.releaseLock();
+    if (acquired) lock.releaseLock();
   }
 }
 

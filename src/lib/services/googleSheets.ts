@@ -1,116 +1,71 @@
-/**
- * ToolkitGO Enterprise Google Sheets Submission Service
- * 
- * Secure server-side relay that pushes pre-registration applications
- * directly to Google Sheets via Google Apps Script Webhook.
- */
+import type { GoogleSheetSubmissionPayload, GoogleSheetSubmissionResult } from "@/types/googleSheets";
 
-export interface GoogleSheetSubmissionPayload {
-  timestamp: string;
-  registrationId: string;
-  fullName: string;
-  phoneNumber: string;
-  hyderabadArea: string;
-  serviceCategory: string;
-  yearsOfExperience: string;
-  source: string;
-  status: string;
-}
-
-export interface GoogleSheetSubmissionResult {
-  success: boolean;
-  message?: string;
-  error?: string;
-}
-
-/**
- * Submits technician pre-registration data to Google Sheets webhook.
- * Incorporates timeout safeguards, redirect handling, and graceful fallback for local development.
- *
- * @param payload - Structured technician registration details
- * @returns Result object indicating success or error status
- */
-export async function submitToGoogleSheet(
-  payload: GoogleSheetSubmissionPayload
-): Promise<GoogleSheetSubmissionResult> {
-  const rawUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
-  // Sanitize webhook URL: strip BOM (\uFEFF), zero-width characters (\u200B-\u200D), quotes and whitespace
-  const webhookUrl = rawUrl
+/** Relay server-side and require a write acknowledgement, including on HTTP 200 responses. */
+export async function submitToGoogleSheet(payload: GoogleSheetSubmissionPayload): Promise<GoogleSheetSubmissionResult> {
+  const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL
     ?.replace(/^[\uFEFF\u200B\u200C\u200D\s"']+|[\s"']+$/g, "")
     .trim();
 
-  // Graceful fallback for local development and initial deployments
-  if (!webhookUrl || webhookUrl === "") {
-    console.warn(
-      "[GoogleSheets Service] GOOGLE_SHEETS_WEBHOOK_URL is not set. Registration payload logged to console:",
-      JSON.stringify(payload, null, 2)
-    );
-    return {
-      success: true,
-      message: "Development mode: Logged payload locally (no webhook configured).",
-    };
+  if (!webhookUrl) {
+    return { success: false, code: "configuration", error: "GOOGLE_SHEETS_WEBHOOK_URL is missing. No registration was saved." };
+  }
+  try {
+    const url = new URL(webhookUrl);
+    if (url.protocol !== "https:" || url.hostname !== "script.google.com" || !/^\/macros\/s\/[^/]+\/exec$/.test(url.pathname) || url.pathname.includes("EXAMPLE")) {
+      return { success: false, code: "configuration", error: "Configure the deployed Google Apps Script web app URL ending in /exec." };
+    }
+  } catch {
+    return { success: false, code: "configuration", error: "GOOGLE_SHEETS_WEBHOOK_URL is not a valid URL." };
   }
 
-  // 8-second timeout controller
+  // Keep the deadline active through response parsing; Apps Script can take time to start.
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000);
-
+  const timeoutId = setTimeout(() => controller.abort(), 25000);
   try {
     const response = await fetch(webhookUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8",
-      },
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload),
-      // Google Apps Script redirects (302) to an execution page; 'follow' is mandatory
       redirect: "follow",
       signal: controller.signal,
     });
-
-    clearTimeout(timeoutId);
-
     if (!response.ok) {
-      console.error(
-        `[GoogleSheets Service] Webhook HTTP error: ${response.status} ${response.statusText}`
-      );
-      return {
-        success: false,
-        error: `Google Sheets webhook returned status ${response.status}`,
-      };
+      return { success: false, code: "http", error: `Google Sheets webhook returned HTTP ${response.status}. Check deployment access and authorization.` };
     }
 
-    const responseText = await response.text();
-    let responseData: Record<string, unknown> = {};
+    const responseText = (await response.text()).trim();
+    let data: unknown;
     try {
-      responseData = JSON.parse(responseText);
+      data = JSON.parse(responseText);
     } catch {
-      // Some Apps Script web apps return text "Success" rather than JSON
-      responseData = { result: responseText };
+      // Support an explicit legacy acknowledgement, never arbitrary HTML or text.
+      if (responseText.toLowerCase() === "success") {
+        return { success: true, message: "Saved to Google Sheets." };
+      }
+      return { success: false, code: "response", error: "Google returned an unexpected response. Check the deployed doPost function and public web app access." };
     }
 
-    if (process.env.NODE_ENV !== "production") {
-      console.log("[GoogleSheets Service] Sync response:", responseData);
+    if (typeof data !== "object" || data === null || Array.isArray(data)) {
+      return { success: false, code: "response", error: "Google did not confirm that the registration was saved." };
     }
-
-    return {
-      success: true,
-      message: "Successfully synchronized with Google Sheets.",
-    };
-  } catch (error: unknown) {
+    const result = "result" in data ? data.result : undefined;
+    const success = "success" in data ? data.success : undefined;
+    const status = "status" in data ? data.status : undefined;
+    const error = "error" in data ? data.error : undefined;
+    if (result === "error" || status === "error" || success === false || (typeof error === "string" && error.trim())) {
+      const detail = typeof error === "string" ? error.replace(/https?:\/\/\S+/g, "[redacted URL]").slice(0, 500) : "The deployed script rejected the registration.";
+      return { success: false, code: "rejected", error: `Google Apps Script: ${detail}` };
+    }
+    if (result === "success" || status === "success" || success === true) {
+      return { success: true, message: "Saved to Google Sheets." };
+    }
+    return { success: false, code: "response", error: "Google did not confirm that the registration was saved." };
+  } catch {
+    if (controller.signal.aborted) {
+      return { success: false, code: "timeout", error: "Google Sheets did not confirm the save within 25 seconds. Check Apps Script Executions before retrying." };
+    }
+    return { success: false, code: "network", error: "Unable to reach the Google Sheets webhook. Check server connectivity." };
+  } finally {
     clearTimeout(timeoutId);
-
-    if (error instanceof Error && error.name === "AbortError") {
-      console.error("[GoogleSheets Service] Request timed out after 8000ms.");
-      return {
-        success: false,
-        error: "Google Sheets connection timed out. Submission will be queued.",
-      };
-    }
-
-    console.error("[GoogleSheets Service] Unexpected error:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown Google Sheets connection error.",
-    };
   }
 }

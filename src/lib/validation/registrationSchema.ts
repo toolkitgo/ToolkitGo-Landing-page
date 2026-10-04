@@ -463,6 +463,14 @@ export const HYDERABAD_AREAS: string[] = Array.from(
   new Set(HYDERABAD_LOCALITIES_BY_ZONE.flatMap((z) => z.areas))
 ).sort((a, b) => a.localeCompare(b));
 
+/** Normalize pasted country prefixes without changing a ten-digit mobile number. */
+export function normalizeIndianMobileNumber(value: string): string {
+  const digits = value.replace(/\D/g, "");
+  return digits.length === 12 && digits.startsWith("91")
+    ? digits.slice(2)
+    : digits;
+}
+
 export function validateRegistrationForm(data: RegistrationFormData): {
   isValid: boolean;
   errors: FormErrors;
@@ -482,7 +490,7 @@ export function validateRegistrationForm(data: RegistrationFormData): {
   }
 
   // 2. Phone Number (10-digit mobile number)
-  const cleanedPhone = data.phoneNumber.replace(/[\s\-+]/g, "").replace(/^91/, "");
+  const cleanedPhone = normalizeIndianMobileNumber(data.phoneNumber);
   if (!data.phoneNumber.trim()) {
     errors.phoneNumber = "Phone number is required.";
   } else if (!/^[6-9]\d{9}$/.test(cleanedPhone)) {

@@ -9,7 +9,19 @@ export interface MobileNavigationProps {
 /** Profile URLs remain unset until the business provides its official accounts. */
 export interface SocialProfile {
   name: string;
+  icon: string;
   href?: string;
+}
+
+/** Footer destinations can be added as the corresponding support pages become available. */
+export interface FooterLink {
+  label: string;
+  href?: string;
+}
+
+export interface FooterLinkGroupProps {
+  title: string;
+  links: FooterLink[];
 }
 
 /** Success dialog data from the completed registration request. */

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
 
 :root {
   --background: #F8F6ED;
@@ -15,6 +16,7 @@
   --color-navy-surface: #141F48;
   --color-navy-light: #1E2D68;
   --color-navy-border: #283B82;
+  --color-watermark-blue: #A6B9DD;
 
   --color-orange: #F57C20;
   --color-orange-hover: #DE6B15;
@@ -22,6 +24,7 @@
   --color-orange-light: #FFF4EB;
   --color-orange-subtle: #FEEBD9;
   --color-orange-border: #FDBA74;
+  --color-app-panel: #F7A66E;
 
   --color-cream: #F8F6ED;
   --color-cream-light: #FCFAF5;
@@ -59,10 +62,12 @@
   --color-input: var(--color-cream-border);
   --color-ring: var(--color-orange-active);
   --shadow-nav: 0 4px 16px rgb(15 25 64 / 5%);
+  --shadow-nav-panel: 0 12px 36px rgb(15 25 64 / 12%);
 
 }
 
-html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
+/* Reserve the scrollbar space when dialogs lock scrolling to keep the form still. */
+html { scroll-behavior: smooth; scroll-padding-top: 6rem; scrollbar-gutter: stable; }
 body {
   background: var(--color-cream);
   color: var(--color-navy);
@@ -85,7 +90,28 @@ section[id] { scroll-margin-top: 1rem; }
 
 /* Shared rhythm keeps all sections aligned without translucent panels. */
 @layer components {
+.navbar-shell { width: min(100% - 1.5rem, 84rem); }
+@media (min-width: 1024px) { .navbar-shell { width: min(100% - 3rem, 84rem); } }
 .page-shell { width: min(100% - 3rem, 72rem); margin-inline: auto; }
+.page-shell-wide { width: min(100% - 3rem, 84rem); margin-inline: auto; }
+.app-download-title { font-size: clamp(2rem, 4.3vw, 4.25rem); line-height: 1.04; letter-spacing: -0.045em; }
+/* The shared fade softens both colors into the footer like the watermark reference. */
+.footer-wordmark {
+  font-size: clamp(4rem, 17.6vw, 16rem);
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  opacity: 0.42;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 26%, #000 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent, #000 26%, #000 55%, transparent 100%);
+}
+.footer-wordmark-main {
+  color: transparent;
+  background: linear-gradient(180deg, var(--color-watermark-blue), var(--color-navy-border));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.footer-wordmark-accent { color: var(--color-orange); }
 .section-space { padding-block: 5.5rem; }
 .section-title {
   font-size: clamp(2rem, 3.5vw, 3rem);
@@ -127,9 +153,29 @@ section[id] { scroll-margin-top: 1rem; }
 .button-secondary { border-color: var(--color-cream-border); background: var(--color-cream); color: var(--color-navy); }
 .button-secondary:hover { background: var(--color-cream-dark); }
 }
+.footer-support ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.5rem; }
+@media (min-width: 1024px) { .footer-support ul { display: flex; } }
 dialog::backdrop { background: rgb(8 14 36 / 65%); }
+/* Picker panels live in the browser's top layer, above sticky navigation. */
+.registration-picker[open] { display: flex; flex-direction: column; max-width: none; max-height: none; animation: registration-picker-enter 160ms ease-out; }
+.registration-picker::backdrop { background: rgb(8 14 36 / 45%); animation: registration-backdrop-enter 160ms ease-out; }
+.registration-control:focus-visible { border-color: var(--color-navy); box-shadow: 0 0 0 2px var(--color-orange-subtle); }
+.registration-control:focus-within { border-color: var(--color-navy); }
+.registration-picker input[type="search"]::-webkit-search-cancel-button { display: none; }
+@keyframes registration-picker-enter {
+  from { transform: translateY(4px); }
+  to { transform: translateY(0); }
+}
+@keyframes registration-backdrop-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (min-width: 640px) {
+  .registration-picker::backdrop { background: rgb(8 14 36 / 15%); }
+}
 @media (max-width: 639px) {
   .page-shell { width: min(100% - 2.5rem, 72rem); }
+  .page-shell-wide { width: min(100% - 2rem, 84rem); }
   .section-space { padding-block: 4rem; }
 }
 @media (prefers-reduced-motion: reduce) {
