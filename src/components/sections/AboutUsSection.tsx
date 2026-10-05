@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { SectionMotion } from "@/components/motion/SectionMotion";
 
 const METRICS = [
   { title: "Skilled professionals", icon: "skilled-professionals" },
@@ -10,8 +11,9 @@ const METRICS = [
 export function AboutUsSection() {
   return (
     <section id="about" className="section-space bg-cream">
+      <SectionMotion>
       <div className="page-shell grid items-center gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
-        <div>
+        <div data-motion>
           <p className="eyebrow">About ToolkitGO</p>
           <h2 className="section-title mt-5">Building better homes,<br /><span className="text-orange">businesses and communities.</span></h2>
           <p className="mt-6 text-base leading-relaxed text-charcoal">
@@ -28,9 +30,10 @@ export function AboutUsSection() {
             ))}
           </ul>
         </div>
-        <Image src="/assets/illustrations/about-washing-machine.svg" alt="A technician helping a homeowner with washing machine maintenance"
+        <Image data-motion-art src="/assets/illustrations/about-washing-machine.svg" alt="A technician helping a homeowner with washing machine maintenance"
           width={1000} height={848} unoptimized className="mx-auto h-auto w-full max-w-lg" />
       </div>
+      </SectionMotion>
     </section>
   );
 }

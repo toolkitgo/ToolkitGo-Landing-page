@@ -18,6 +18,7 @@ import {
 } from "@/lib/validation/registrationSchema";
 import { SuccessModal } from "@/components/ui/SuccessModal";
 import { SearchableSelect } from "@/components/ui/SearchableSelect";
+import { SectionMotion } from "@/components/motion/SectionMotion";
 
 const INITIAL_FORM: RegistrationFormData = {
   fullName: "",
@@ -88,11 +89,11 @@ export function TechnicianPreRegisterSection() {
   return (
     <section id="for-technicians" className="section-space bg-navy text-white">
       <div className="page-shell max-w-5xl">
-        <div className="mb-8 max-w-2xl sm:mb-10">
+        <SectionMotion><div data-motion className="mb-8 max-w-2xl sm:mb-10">
           <p className="eyebrow eyebrow-dark mb-5">For technicians</p>
           <h2 className="section-title">Join our <span className="text-orange">network.</span></h2>
           <p className="mt-4 text-base leading-relaxed text-cream sm:text-lg">Find work opportunities across Hyderabad and nearby areas. Tell us a little about yourself to pre-register.</p>
-        </div>
+        </div></SectionMotion>
         <div className="rounded-2xl border border-cream-border bg-white p-5 text-navy sm:p-8 lg:p-10">
           <div className="mb-7 border-b border-cream-border pb-5">
             <h3 className="text-xl font-semibold tracking-tight">Partner pre-registration</h3>

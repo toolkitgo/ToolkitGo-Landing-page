@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "motion/react";
@@ -7,13 +8,13 @@ import { ArrowRight, Mail, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CONTACT_EMAIL } from "@/lib/site";
 import type { MobileNavigationProps } from "@/types/ui";
+import { CompanyNavigation } from "@/components/ui/CompanyNavigation";
 
 const NAV_LINKS = [
   { name: "Home", href: "#home" },
   { name: "Services", href: "#services" },
   { name: "Why us", href: "#why-us" },
   { name: "How it works", href: "#how-it-works" },
-  { name: "About us", href: "#about" },
   { name: "Our app", href: "#app-download" },
 ];
 
@@ -38,8 +39,8 @@ function MobileNavigation({ activeSection, onNavigate }: MobileNavigationProps) 
           const active = activeSection === link.href.slice(1);
           return (
             <li key={link.href}>
-              <a
-                href={link.href}
+              <Link
+                href={`/${link.href}`}
                 onClick={onNavigate}
                 aria-current={active ? "location" : undefined}
                 className={cn(
@@ -50,20 +51,21 @@ function MobileNavigation({ activeSection, onNavigate }: MobileNavigationProps) 
                 <span>{link.name}</span>
                 {active ? <span aria-hidden="true" className="size-2 rounded-full bg-orange" />
                   : <ArrowRight aria-hidden="true" className="size-4 text-charcoal-muted" />}
-              </a>
+              </Link>
             </li>
           );
         })}
+        <li><CompanyNavigation onNavigate={onNavigate} /></li>
       </ul>
       <div className="mt-3 border-t border-cream-border px-1 pt-4">
-        <a href="#for-technicians" onClick={onNavigate} className="button-primary min-h-12 w-full rounded-full"
+        <Link href="/#for-technicians" onClick={onNavigate} className="button-primary min-h-12 w-full rounded-full"
           aria-current={activeSection === "for-technicians" ? "location" : undefined}>
           Join as a Partner <ArrowRight aria-hidden="true" className="size-4" />
-        </a>
-        <a href={`mailto:${CONTACT_EMAIL}`} onClick={onNavigate}
+        </Link>
+        <Link href={`mailto:${CONTACT_EMAIL}`} onClick={onNavigate}
           className="mt-2 flex min-h-11 items-center justify-center gap-2 rounded-xl text-sm text-charcoal-muted hover:text-navy">
           <Mail aria-hidden="true" className="size-4" />{CONTACT_EMAIL}
-        </a>
+        </Link>
       </div>
     </motion.nav>
   );
@@ -85,7 +87,7 @@ export function Navbar1() {
     const updateActiveSection = () => {
       frame = null;
       const threshold = (headerRef.current?.getBoundingClientRect().bottom ?? 80) + 40;
-      let current = "home";
+      let current = window.location.pathname === "/" ? "home" : "";
       for (const section of sections) {
         if (section.getBoundingClientRect().top > threshold) break;
         current = section.id;
@@ -145,31 +147,32 @@ export function Navbar1() {
         if (!(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) setIsOpen(false);
       }}>
       <div className="navbar-shell mx-auto flex h-16 items-center justify-between gap-3 rounded-3xl border border-cream-border bg-cream px-3 shadow-nav lg:gap-4 lg:rounded-full lg:px-5 xl:px-6">
-        <a ref={logoRef} href="#home" aria-label="ToolkitGO home" onClick={() => setIsOpen(false)} className="shrink-0 rounded-sm">
+        <Link ref={logoRef} href="/#home" aria-label="ToolkitGO home" onClick={() => setIsOpen(false)} className="shrink-0 rounded-sm">
           <Image src="/assets/branding/logo.png" alt="ToolkitGO" width={378} height={86}
             sizes="(min-width: 1280px) 176px, (min-width: 1024px) 160px, 144px" preload
             className="h-auto w-36 lg:w-40 xl:w-44" />
-        </a>
+        </Link>
         <nav aria-label="Main navigation" className="hidden items-center gap-1 lg:flex">
           <ul className="flex items-center gap-1">
             {NAV_LINKS.map((link) => {
               const active = activeSection === link.href.slice(1);
               return (
                 <li key={link.href}>
-                  <a href={link.href} aria-current={active ? "location" : undefined}
+                  <Link href={`/${link.href}`} aria-current={active ? "location" : undefined}
                     className={cn("relative inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-semibold text-navy transition-colors hover:bg-cream-dark xl:px-3.5", active && "bg-cream-dark")}>
                     {link.name}
                     {active && <span aria-hidden="true" className="absolute inset-x-4 bottom-1.5 h-0.5 rounded-full bg-orange" />}
-                  </a>
+                  </Link>
                 </li>
               );
             })}
+            <li><CompanyNavigation /></li>
           </ul>
         </nav>
-        <a href="#for-technicians" aria-current={activeSection === "for-technicians" ? "location" : undefined}
+        <Link href="/#for-technicians" aria-current={activeSection === "for-technicians" ? "location" : undefined}
           className="button-primary hidden min-h-11 shrink-0 rounded-full lg:inline-flex">
           Join as a Partner <ArrowRight aria-hidden="true" className="size-4" />
-        </a>
+        </Link>
         <motion.button ref={menuButtonRef} type="button" tabIndex={0}
           aria-label={isOpen ? "Close menu" : "Open menu"} aria-expanded={isOpen}
           aria-controls={isOpen ? "mobile-navigation" : undefined} onClick={() => setIsOpen((open) => !open)}

@@ -94,6 +94,7 @@ test("API returns success only after the sheet confirms a write", async () => {
       "next/server": { NextResponse: { json: (data, init) => Response.json(data, init) } },
       "@/lib/validation/registrationSchema": schema,
       "@/lib/services/googleSheets": { submitToGoogleSheet: async () => sheetResult },
+      "@/lib/site": loadTs("src/lib/site.ts"),
     });
     const response = await route.POST(new Request("http://localhost/api/register", { method: "POST", body: JSON.stringify(form) }));
     assert.equal(response.status, status);

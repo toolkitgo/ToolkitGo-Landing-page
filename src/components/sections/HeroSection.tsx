@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { SectionMotion } from "@/components/motion/SectionMotion";
 
 const BADGES = [
   { title: "Fast bookings", icon: "fast-bookings" },
@@ -11,6 +12,7 @@ const BADGES = [
 export function HeroSection() {
   return (
     <section id="home" className="bg-cream pt-12 pb-10 sm:pt-16 sm:pb-12">
+      <SectionMotion>
       <div className="page-shell">
         <div className="grid items-center gap-8 lg:grid-cols-[1.2fr_1fr] lg:gap-12">
           <div>
@@ -27,6 +29,7 @@ export function HeroSection() {
               <a href="#for-technicians" className="button-secondary">Join as a partner</a>
             </div>
           </div>
+          <div data-motion-parallax="24"><div data-motion-enter>
           <Image
             src="/assets/illustrations/hero-technician-door.svg"
             alt="ToolkitGO verified technician arriving at a customer doorstep in Hyderabad for on-demand home service"
@@ -36,16 +39,18 @@ export function HeroSection() {
             unoptimized
             className="mx-auto h-auto w-full max-w-[420px] lg:max-w-none"
           />
+          </div></div>
         </div>
-        <ul className="mt-10 grid grid-cols-2 gap-x-5 gap-y-6 border-t border-cream-border pt-7 md:grid-cols-4 lg:mt-12">
+        <ul data-motion-group className="mt-10 grid grid-cols-2 gap-x-5 gap-y-6 border-t border-cream-border pt-7 md:grid-cols-4 lg:mt-12">
           {BADGES.map((badge) => (
-            <li key={badge.icon} className="flex items-center gap-3">
+            <li data-motion key={badge.icon} className="flex items-center gap-3">
               <Image src={`/assets/icons/features/${badge.icon}.svg`} alt="" width={44} height={44} unoptimized className="shrink-0" />
               <span className="max-w-36 text-sm font-semibold leading-snug">{badge.title}</span>
             </li>
           ))}
         </ul>
       </div>
+      </SectionMotion>
     </section>
   );
 }

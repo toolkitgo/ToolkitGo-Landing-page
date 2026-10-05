@@ -1,4 +1,8 @@
-import type { RefObject } from "react";
+import type { ReactNode, RefObject } from "react";
+
+export interface SiteShellProps {
+  children: ReactNode;
+}
 
 /** Local state is owned by Navbar1; the menu receives only its presentation data. */
 export interface MobileNavigationProps {

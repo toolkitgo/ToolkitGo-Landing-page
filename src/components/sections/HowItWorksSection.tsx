@@ -1,36 +1,27 @@
-import Image from "next/image";
+import { BookingSequence } from "@/components/motion/BookingSequence";
+import type { BookingStep } from "@/types/motion";
 
-const STEPS = [
-  { title: "Choose a service", description: "Select from a wide range of services.", image: "step-1-choose-service.png" },
-  { title: "Book & pay", description: "Pick your preferred date and time.", image: "step-2-book-pay.svg" },
-  { title: "Technician visits", description: "Our verified professional arrives at your doorstep.", image: "step-3-technician-visits.svg" },
-  { title: "Service completed", description: "Relax and enjoy a hassle-free experience.", image: "step-4-service-completed.svg" },
+const STEPS: readonly BookingStep[] = [
+  { title: "Choose a service", titleLines: ["Choose", "a service"], description: "A quick fix or a bigger job. Find the right service for your home or business.", image: "step-1-choose-service-original.png", caption: "Your home. Your choice." },
+  { title: "Book & pay", titleLines: ["Book", "& pay"], description: "Pick a date and time that works for you. Book your service in a few simple steps.", image: "step-2-book-pay.svg", caption: "On your schedule." },
+  { title: "Technician visits", titleLines: ["Expert at", "your door."], description: "A verified professional arrives at your doorstep, ready to get to work.", image: "step-3-technician-visits.svg", caption: "Expert at your doorstep." },
+  { title: "Service completed", titleLines: ["All done.", "Just like that."], description: "One less thing on your to-do list. Get back to the things that matter to you.", image: "step-4-service-completed.svg", caption: "All sorted." },
 ];
 
-/** A numbered sequence gives the booking illustrations a clear reading order. */
+/** Server-rendered copy supplies the four chapters of the scroll-driven booking story. */
 export function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="section-space border-y border-cream-border bg-white">
-      <div className="page-shell">
-        <p className="eyebrow">How ToolkitGO works</p>
-        <h2 className="section-title mt-5">Get service in <span className="text-orange">4 simple steps.</span></h2>
-        <p className="mt-5 text-base leading-relaxed text-charcoal sm:text-lg">From booking to a hassle-free home, it&apos;s quick and easy.</p>
-        <ol className="mt-10 grid gap-x-7 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-          {STEPS.map((step, index) => (
-            <li key={step.image}>
-              <div className="relative mx-auto mb-6 aspect-[1.15/1] w-full max-w-64">
-                <Image src={`/assets/illustrations/steps/${step.image}`} alt={step.title} fill
-                  sizes="(max-width: 640px) 256px, (max-width: 1024px) 40vw, 256px"
-                  unoptimized={step.image.endsWith(".svg")} className="object-contain" />
-              </div>
-              <div className="border-t border-cream-border pt-5">
-                <span className="text-xs font-semibold tracking-widest text-charcoal-muted">STEP 0{index + 1}</span>
-                <h3 className="mt-2 text-lg font-bold">{step.title}</h3>
-                <p className="mt-2 max-w-64 text-sm leading-relaxed text-charcoal">{step.description}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
+    <section id="how-it-works" aria-labelledby="how-it-works-title" className="section-space border-y border-cream-border bg-white">
+      <div className="page-shell-wide">
+        <BookingSequence steps={STEPS}>
+          <div data-motion className="journey-heading">
+            <div>
+              <p className="eyebrow">How ToolkitGO works</p>
+              <h2 id="how-it-works-title" className="section-title mt-4">From to-do. <span className="text-orange">To done.</span></h2>
+            </div>
+            <p>Four simple steps.<br />A little less hassle in your everyday.</p>
+          </div>
+        </BookingSequence>
       </div>
     </section>
   );

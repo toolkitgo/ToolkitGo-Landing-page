@@ -1,0 +1,465 @@
+[
+  {
+    "slug": "terms-of-service",
+    "title": "Terms of Service",
+    "description": "The terms that govern using ToolkitGo and booking services.",
+    "introduction": "Welcome to ToolkitGo. By accessing or using our platform, website, or mobile application, you agree to these Terms of Service.",
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "About ToolkitGo",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "ToolkitGo is a technology-enabled marketplace that connects customers with independent service professionals for household and maintenance services including but not limited to plumbing, electrical work, appliance repair, cleaning, carpentry, painting, and maintenance services. ToolkitGo facilitates bookings, communications, and payments, while actual services are performed by independent professionals."
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "User Eligibility",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Users must be at least 18 years old and capable of entering into legally binding agreements under Indian law. Where a booking is made on behalf of an organization or business, the user warrants they have the authority to bind that entity."
+          }
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Account Registration & Security",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Users are responsible for:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Providing accurate, current, and complete information during registration.",
+              "Maintaining the confidentiality and security of login credentials and OTPs.",
+              "All activities and bookings conducted through their registered account.",
+              "Not creating accounts using false identities or unauthorized details."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "Booking & Service Execution",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              "Customers may request services through the platform based on location and professional availability.",
+              "Service timings may occasionally vary due to traffic, location, emergencies, or operational factors.",
+              "Any diagnosis, inspection, spare parts replacement, or additional work identified on-site must be communicated and agreed upon with the customer before execution."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section-5",
+        "title": "Pricing, Payments & Additional Work",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              "Standard service charges, inspection, or estimated costs are displayed prior to booking confirmation.",
+              "Payments must be processed securely through approved digital payment gateways or authorized cash-on-delivery options.",
+              "Inspection, diagnosis, or visit charges, where applicable, may remain payable even if the customer chooses not to proceed with the recommended repair.",
+              "Spare parts, consumables, and extra tasks outside the initial booking scope will incur separate, mutually agreed charges."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section-6",
+        "title": "Service Professionals (Independent Contractors)",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              "Service professionals are independent third-party contractors and not employees, agents, or representatives of ToolkitGo.",
+              "While ToolkitGo conducts onboarding and verification checks based on provided documentation, this does not constitute an absolute guarantee of a professional's performance or fitness for every specific task."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section-7",
+        "title": "User & Professional Responsibilities (Code of Conduct)",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Customer Responsibilities:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Provide safe, clear, and reasonable access to the service location.",
+              "Ensure a safe working environment (keeping pets and children away from hazardous work areas).",
+              "Refrain from abusive, threatening, discriminatory, or unlawful behavior toward service professionals.",
+              "Avoid forcing professionals to perform unauthorized work outside the agreed scope."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Professional Responsibilities:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Maintain professional conduct and safety standards at the service location.",
+              "Respect customer privacy and safeguard customer data.",
+              "Refrain from requesting unauthorized offline payments or extra charges."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section-8",
+        "title": "Cancellations and Refunds",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "All bookings, cancellations, and rescheduling requests are strictly governed by the ToolkitGo Refund & Cancellation Policy."
+          }
+        ]
+      },
+      {
+        "id": "section-9",
+        "title": "Limitation of Liability & Indemnification",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "To the extent permitted by applicable law, ToolkitGo shall not be liable for any indirect, incidental, property damage, or consequential losses arising from services performed by independent professionals. Nothing in these terms excludes liabilities that cannot lawfully be excluded under Indian law. Users agree to indemnify ToolkitGo against claims arising from platform misuse or terms violation."
+          }
+        ]
+      },
+      {
+        "id": "section-10",
+        "title": "Intellectual Property",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "All ToolkitGo logos, brand names, trademarks, UI/UX designs, source code, and website content remain the exclusive intellectual property of ToolkitGo."
+          }
+        ]
+      },
+      {
+        "id": "section-11",
+        "title": "Account Suspension & Termination",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "ToolkitGo reserves the right to suspend or terminate accounts immediately in cases of fraud, safety breaches, payment abuse, or violation of these terms."
+          }
+        ]
+      },
+      {
+        "id": "section-12",
+        "title": "Governing Law & Dispute Resolution",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "These Terms shall be governed by the laws of India. Any disputes shall be subject to the jurisdiction applicable to ToolkitGo's registered operations."
+          }
+        ]
+      },
+      {
+        "id": "section-13",
+        "title": "Modifications",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "ToolkitGo may update these terms periodically. Continued platform usage constitutes formal acceptance of the revised terms."
+          }
+        ]
+      },
+      {
+        "id": "section-14",
+        "title": "Contact",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "For questions regarding these Terms, contact:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Email: info@toolkitgo.in",
+              "Website: toolkitgo.in"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "refund-cancellation",
+    "title": "Refund & Cancellation Policy",
+    "description": "Cancellations, rescheduling, service concerns, and refunds.",
+    "introduction": "",
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "Customer Cancellation",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              "More than 2 Hours Before Scheduled Service: No cancellation fee; a 100% full refund will be processed.",
+              "Within 2 Hours of Scheduled Service: A late cancellation fee may be deducted to compensate for the professional's transit or preparation effort.",
+              "After Service Professional Arrival / Doorstep Cancellation: If the professional arrives at the location and the customer cancels, refuses access, or is unresponsive, applicable visit, inspection, or travel charges will be non-refundable."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "Service Professional Cancellation",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "If an assigned professional cancels due to unforeseen emergencies, ToolkitGo will use reasonable efforts to arrange an immediate replacement or process a full refund."
+          }
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Rescheduling",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Customers may reschedule bookings through the platform subject to slot availability. Reasonable limits may apply to repeated or last-minute rescheduling."
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "Refund Eligibility",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Refunds may be considered in verified situations such as:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "The service professional fails to arrive at the scheduled location.",
+              "Duplicate transaction charges due to technical payment gateway glitches.",
+              "Booking errors caused directly by the platform system.",
+              "Verified service quality issues reported with supporting photographs or details within 24 hours of service completion."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section-5",
+        "title": "Rework / Rectification Process",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Where a service quality issue is reported, ToolkitGo reserves the right to first facilitate inspection, correction, or re-performance (rework) of the affected service before determining whether a monetary refund is appropriate."
+          }
+        ]
+      },
+      {
+        "id": "section-6",
+        "title": "Spare Parts & Warranty",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Where spare parts are supplied or installed, warranty terms are strictly subject to the respective manufacturer's or supplier's policy. Warranty does not cover misuse, external electrical surges, physical damage, or normal wear and tear."
+          }
+        ]
+      },
+      {
+        "id": "section-7",
+        "title": "Non-Refundable Cases",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Refunds will not be provided for:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Change of mind after the service has been successfully completed.",
+              "Customer absence or unavailability at the location during the scheduled window.",
+              "Additional custom services or parts requested and completed outside the original booking."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section-8",
+        "title": "Refund Processing Timeline",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Approved refunds are typically initiated within 5-10 business days through the original payment method. The actual credit time depends on the customer's bank or payment provider."
+          }
+        ]
+      },
+      {
+        "id": "section-9",
+        "title": "Dispute Resolution",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "For booking reviews, complaints, or resolutions, customers must contact support with booking details at info@toolkitgo.in."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "privacy",
+    "title": "Privacy Policy",
+    "description": "How ToolkitGo collects, uses, and protects personal information.",
+    "introduction": "ToolkitGo respects your privacy and is committed to protecting your personal information.",
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "Information We Collect",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              "Personal Information: Name, mobile number, email address, and service address.",
+              "Booking & Service History: Details of past bookings, service preferences, and feedback.",
+              "Device & Location Data: Approximate device location (when permitted), IP address, browser type, and app usage analytics to optimize matching and performance.",
+              "Payment Information: Processed securely through third-party payment gateways. ToolkitGo does not store complete debit/credit card numbers or banking passwords.",
+              "Professional Data (For Technicians): Onboarding records, verification documents, skills, bank details, and service logs."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "How We Use Information",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "We use collected data strictly to:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Process, track, and manage service bookings seamlessly.",
+              "Match customers with the nearest available service professionals.",
+              "Maintain platform security, prevent fraud, and ensure safety.",
+              "Provide responsive customer support and resolve disputes.",
+              "Send essential service notifications and booking alerts (with opt-out options for promotional messages)."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Information Sharing Practices",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "We share data only when necessary:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "With Assigned Service Professionals: Sharing only necessary details (Customer Name, Phone, Service Address) required to complete the service.",
+              "With Payment Processors: To complete secure financial clearances.",
+              "With Legal Authorities: Strictly when mandated by applicable laws, regulations, or court orders."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "Data Security",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "ToolkitGo implements reasonable technical, administrative, and organizational safeguards designed to protect personal information from unauthorized access, loss, or disclosure."
+          }
+        ]
+      },
+      {
+        "id": "section-5",
+        "title": "Data Retention",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Information is retained only as long as reasonably necessary to provide active services, maintain business records, resolve disputes, and comply with legal or tax obligations."
+          }
+        ]
+      },
+      {
+        "id": "section-6",
+        "title": "User Rights",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Subject to applicable law, users have the right to request:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Access to their stored personal data.",
+              "Correction of inaccurate or outdated information.",
+              "Deletion or deactivation of eligible account details."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section-7",
+        "title": "Cookies & Tracking",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "ToolkitGo uses cookies and tracking technologies to enhance user navigation and app performance. Users can control cookie preferences via browser settings."
+          }
+        ]
+      },
+      {
+        "id": "section-8",
+        "title": "Marketing Communications",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Users may receive essential operational updates. Promotional offers or marketing alerts are sent where permitted, and users can opt out at any time."
+          }
+        ]
+      },
+      {
+        "id": "section-9",
+        "title": "Policy Updates",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "We may update this Privacy Policy periodically. Updated versions will be published immediately on the platform."
+          }
+        ]
+      },
+      {
+        "id": "section-10",
+        "title": "Contact",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "For any privacy-related queries, contact:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Email: info@toolkitgo.in",
+              "Website: toolkitgo.in"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

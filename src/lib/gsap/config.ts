@@ -6,6 +6,9 @@ import { useGSAP } from "@gsap/react";
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, useGSAP);
 
+  // Lenis and ScrollTrigger share real elapsed time, including after a busy frame.
+  gsap.ticker.lagSmoothing(0);
+
   // High-performance defaults
   gsap.defaults({
     ease: "power3.out",
